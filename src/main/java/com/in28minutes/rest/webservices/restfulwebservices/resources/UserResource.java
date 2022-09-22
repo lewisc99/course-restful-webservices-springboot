@@ -5,6 +5,10 @@ import com.in28minutes.rest.webservices.restfulwebservices.dao.UserDaoService;
 import com.in28minutes.rest.webservices.restfulwebservices.exceptions.UserNotFoundException;
 import com.in28minutes.rest.webservices.restfulwebservices.models.User;
 import jakarta.validation.Valid;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,6 +16,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static java.util.Arrays.stream;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class UserResource {
@@ -24,21 +34,39 @@ public class UserResource {
     }
 
     @GetMapping("/users")
-    public List<User> retrieveAllUsers()
+    ResponseEntity<CollectionModel<EntityModel<User>>> retrieveAllUsers()
     {
-        return service.findAll();
+
+        List<EntityModel<User>> users = StreamSupport.stream(service.findAll().spliterator(), false)
+                .map(user -> EntityModel.of(user,
+                        linkTo(methodOn(UserResource.class).retrieveUser(user.getId())).withSelfRel(), //
+                        linkTo(methodOn(UserResource.class).retrieveAllUsers()).withRel("getAll"))) //
+                .collect(Collectors.toList());
+
+
+        return ResponseEntity.ok(
+                CollectionModel.of(users,
+                        linkTo(methodOn(UserResource.class).retrieveAllUsers()).withSelfRel()));
+
     }
 
 
+
+    //Entity Model
+    //WebMvcLinkBuilder
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable int id)
+    public EntityModel<User> retrieveUser(@PathVariable int id)
     {
         User user = service.findOne(id);
         if (user == null)
         {
             throw new UserNotFoundException("id: " + id);
         }
-        return user;
+        EntityModel<User> entityModel = EntityModel.of(user);
+        WebMvcLinkBuilder link = linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).retrieveUser(id));
+       entityModel.add(link.withRel("get-user-by-id"));
+
+        return entityModel;
     }
 
 
