@@ -27,12 +27,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserJpaResource {
 
 
-    private UserDaoService service;
     private UserRepository repository;
 
-    public UserJpaResource(UserDaoService service, UserRepository repository)
+    public UserJpaResource( UserRepository repository)
     {
-        this.service = service;
         this.repository = repository;
     }
 
