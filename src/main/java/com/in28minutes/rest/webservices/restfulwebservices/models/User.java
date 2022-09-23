@@ -1,12 +1,23 @@
 package com.in28minutes.rest.webservices.restfulwebservices.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
+
+
+@Entity(name="user_details")
 public class User {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
 
 
@@ -18,6 +29,9 @@ public class User {
     @Past( message = "Birth Date should be in the past")
     @JsonProperty("birth_date")
     private LocalDate birthDate;
+
+    public User() {
+    }
 
     public User(Integer id, String name, LocalDate birthDate) {
         this.id = id;
