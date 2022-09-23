@@ -1,7 +1,6 @@
 package com.in28minutes.rest.webservices.restfulwebservices.resources;
 
 
-import com.in28minutes.rest.webservices.restfulwebservices.dao.UserDaoService;
 import com.in28minutes.rest.webservices.restfulwebservices.exceptions.UserNotFoundException;
 import com.in28minutes.rest.webservices.restfulwebservices.models.User;
 import com.in28minutes.rest.webservices.restfulwebservices.repositories.UserRepository;
