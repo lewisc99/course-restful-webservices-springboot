@@ -1,11 +1,14 @@
 package com.in28minutes.rest.webservices.restfulwebservices.models;
 
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 //@JsonIgnoreProperties({"field1","field2"}) will apply to field1 and field2 similar to @JsonIgnore.
+
+@JsonFilter("SomeBeanFilter")
 public class SomeBean {
 
 
@@ -13,7 +16,7 @@ public class SomeBean {
     private String field1;
     private String field2;
 
-    @JsonIgnore
+  //  @JsonIgnore
     private String field3;
 
     public SomeBean(String value1, String value2, String value3) {
