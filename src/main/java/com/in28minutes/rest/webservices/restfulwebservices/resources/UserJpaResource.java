@@ -2,6 +2,7 @@ package com.in28minutes.rest.webservices.restfulwebservices.resources;
 
 
 import com.in28minutes.rest.webservices.restfulwebservices.exceptions.UserNotFoundException;
+import com.in28minutes.rest.webservices.restfulwebservices.models.Post;
 import com.in28minutes.rest.webservices.restfulwebservices.models.User;
 import com.in28minutes.rest.webservices.restfulwebservices.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -95,6 +96,23 @@ public class UserJpaResource {
         }
         repository.deleteById(id);
     }
+
+
+
+    @GetMapping("/users/{id}/posts")
+    public List<Post> retrievePostForUser(@PathVariable int id)
+    {
+        Optional<User> user = repository.findById(id);
+
+        if (user.isEmpty())
+        {
+            throw new UserNotFoundException("id: " + id);
+        }
+
+        return user.get().getPosts();
+
+    }
+
 
 
 
